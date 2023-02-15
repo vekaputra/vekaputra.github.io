@@ -25,11 +25,11 @@
                 }
                 const nameToken = tokens[2].split(' - ');
 
-                result += `${nameToken[0]},${nameToken[1]},${clrDot(tokens[3])},${clrDot(tokens[4])},${clrDot(tokens[5])},${clrDot(tokens[6])},${clrDot(tokens[7])},${clrDot(tokens[8])}\n`;
+                result += `${nameToken[0]},"${nameToken[1]}",${clrDot(tokens[3])},${clrDot(tokens[4])},${clrDot(tokens[5])},${clrDot(tokens[6])},${clrDot(tokens[7])},${clrDot(tokens[8])}\n`;
             }
             document.getElementById("result").value = result;
         }
-
+        
         function clrDot(val) {
             if (val == ".") {
                 return 0;
