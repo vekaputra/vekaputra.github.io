@@ -20,12 +20,18 @@
             let result = '';
             for (const row of rows) {
                 const tokens = row.split('","').filter(n => n);
-                if (tokens.length != 10) {
+                let contents = [];
+                for (const token of tokens) {
+                    if (token != "\"" && token != "") {
+                        contents.push(token);
+                    }
+                }
+                if (contents.length != 8) {
                     continue;
                 }
-                const nameToken = tokens[2].split(' - ');
+                const nameToken = contents[1].split(' - ');
 
-                result += `${nameToken[0]},"${nameToken[1]}",${clrDot(tokens[3])},${clrDot(tokens[4])},${clrDot(tokens[5])},${clrDot(tokens[6])},${clrDot(tokens[7])},${clrDot(tokens[8])}\n`;
+                result += `${nameToken[0]},"${nameToken[1]}",${clrDot(contents[2])},${clrDot(contents[3])},${clrDot(contents[4])},${clrDot(contents[5])},${clrDot(contents[6])},${clrDot(contents[7])}\n`;
             }
             document.getElementById("result").value = result;
         }
