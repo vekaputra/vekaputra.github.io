@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        * {
+            font-family: Arial;
+        }
+        textarea {
+            width: 800px;
+            height: 250px;
+        }
+    </style>
+</head>
+<body>
+    <h2>OLD</h2>
+    <div><textarea id="old"></textarea></div>
+    <h2>NEW</h2>
+    <div><textarea id="new"></textarea></div>
+    <div><button onclick="convert()">Convert</button></div>
+    <h2>Result</h2>
+    <div><textarea id="result"></textarea></div>
+    <script>
+        function convert() {
+            const oldMap = parseCSVContent(document.getElementById("old").value);
+            const newMap = parseCSVContent(document.getElementById("new").value);
+            let changeMap = {};
+
+            for (const [key, value] of Object.entries(newMap)) {
+                if (oldMap[key] != null) {
+                    changeMap[key] = value - oldMap[key];
+                    console.log("---", key, changeMap[key], value, oldMap[key]);
+                } else {
+                    changeMap[key] = value;
+                    console.log("+++", key, changeMap[key], value);
+                }
+            }
+
+            for (const [key, value] of Object.entries(oldMap)) {
+                if (newMap[key] == null) {
+                    changeMap[key] = -value;
+                    console.log("------", key, changeMap[key], value, oldMap[key]);
+                }
+            }
+
+            let result = "Name,Change\n";
+            for (const [key, value] of Object.entries(changeMap)) {
+                if (value == 0) {
+                    continue;
+                }
+                result += key + "," + value + "\n";
+            }
+
+            document.getElementById("result").value = result;
+        }
+
+        function parseCSVContent(content) {
+            const rows = content.split(/\r?\n/);
+
+            let data = [];
+
+            // Loop through each row
+            for (let i = 0; i < rows.length; i++) {
+                if (i < 2) {
+                    continue;
+                }
+
+                const row = rows[i];
+
+                // Split the row into an array of columns
+                const columns = row.split(',');
+
+                if (columns.length == 0) {
+                    continue;
+                }
+
+                // Loop through each column and check for double quotes
+                for (let j = 0; j < columns.length; j++) {
+                    let column = columns[j];
+
+                    // If the column starts with a double quote, concatenate it with the next column until the closing double quote is found
+                    if (column.startsWith('"')) {
+                        while (!column.endsWith('"')) {
+                            j++;
+                            column += columns[j];
+                        }
+                    }
+
+                    // Remove the double quotes from the column value
+                    column = column.replace(/"/g, '');
+
+                    // Add the column value to the data array
+                    data[i-1] = data[i-1] || [];
+                    data[i-1][j] = column;
+                }
+            }
+
+            let map = {};
+
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i].filter(n => n);
+                if (row.length == 0) {
+                    continue;
+                }
+                const key = row[0].concat(' - ', row[1]);
+                map[key] = parseInt(row[2].replace('.00', '').replace(/,/g, ''));
+            }
+
+            return map;
+        }
+        
+        function clrDot(val) {
+            if (val == ".") {
+                return 0;
+            }
+            return parseInt(val.split('.')[0]);
+        }
+    </script>
+</body>
+</html>
