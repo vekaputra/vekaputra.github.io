@@ -100,7 +100,7 @@
                 if (row.length == 0) {
                     continue;
                 }
-                const key = row[0].trim().concat(' - ', row[1].trim());
+                const key = row[0].toUpperCase().trim().concat(' - ', row[1].trim());
                 map[key] = parseInt(row[2].replace('.00', '').replace(/,/g, ''));
             }
 
